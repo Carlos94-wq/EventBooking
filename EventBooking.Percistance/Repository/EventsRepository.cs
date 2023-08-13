@@ -1,0 +1,40 @@
+﻿using Dapper;
+using EventBooking.Domain.Entities;
+using EventBooking.Domain.Interfaces;
+using System.Data;
+
+namespace EventBooking.Percistance.Repository
+{
+    public class EventsRepository : IEventsRepository
+    {
+        private readonly IDbContext _dbContext;
+
+        public EventsRepository(IDbContext dbContext)
+        {
+            _dbContext = dbContext;
+        }
+
+        public async Task<Events> GetEventDetails(int EventId)
+        {
+            using (var conn = _dbContext.GetDbConnection())
+            {
+                var parameters = new
+                {
+                    @EventID = EventId
+                };
+                var eventDetails = await conn.QueryAsync<Events>("GetEventDetails", parameters, commandType: CommandType.StoredProcedure);
+
+                return eventDetails.FirstOrDefault();
+            }
+        }
+
+        public async Task<IEnumerable<Events>> GetUpcomingEvents()
+        {
+            using (var conn = _dbContext.GetDbConnection())
+            {
+                var UpcomingEvents = await conn.QueryAsync<Events>("GetUpcomingEvents");
+                return UpcomingEvents;
+            }
+        }
+    }
+}
