@@ -35,7 +35,7 @@ namespace EvenBooking.Api.Controllers
         {
             try
             {
-                var result = await _mediator.Send(new CreateBooking.Command(request.UserId, request.EventId, request.NumberOfSeats));
+                var result = await _mediator.Send(new CreateBooking.Command(request.UserId, request.EventId, request.NumberOfSeats, request.UserEmail));
                 var response = new ApiResponse<bool>(result);
 
                 return Ok(response);

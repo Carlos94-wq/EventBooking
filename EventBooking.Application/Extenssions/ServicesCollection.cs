@@ -1,4 +1,5 @@
-﻿using EventBooking.Domain.CustomEntities;
+﻿using EventBooking.Application.Helpers;
+using EventBooking.Domain.CustomEntities;
 using EventBooking.Domain.Interfaces;
 using EventBooking.Percistance.DbContext;
 using EventBooking.Percistance.Repository;
@@ -16,12 +17,14 @@ namespace EventBooking.Application.Extenssions
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.Configure<DbStringConnection>(configuration.GetSection("ConnectionStrings"));
             services.Configure<TokenConfigure>(configuration.GetSection("tokenManagement"));
+            services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));
 
             services.AddTransient<IDbContext, DbContext>();
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IEventsRepository, EventsRepository>();        
             services.AddTransient<IVenuesRepository, VenuesRespository>();        
             services.AddTransient<IBookingRepository, BookingRepository>();        
+            services.AddTransient<IEmailSenderNotification, EmailSenderNotification>();        
 
             return services;
         }
