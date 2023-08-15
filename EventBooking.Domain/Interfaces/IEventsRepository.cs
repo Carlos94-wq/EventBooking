@@ -5,6 +5,6 @@ namespace EventBooking.Domain.Interfaces
     public interface IEventsRepository
     {
         Task<IEnumerable<Events>> GetUpcomingEvents();
-        Task<Events> GetEventDetails (int EventId);
+        Task<Events> GetEventDetails(int EventId);
     }
 }

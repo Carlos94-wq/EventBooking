@@ -1,12 +1,7 @@
 ﻿using Dapper;
 using EventBooking.Domain.Entities;
 using EventBooking.Domain.Interfaces;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EventBooking.Percistance.Repository
 {
@@ -31,6 +26,15 @@ namespace EventBooking.Percistance.Repository
                 };
                 var isBooked = await conn.ExecuteAsync("CreateBooking", parameters, commandType: CommandType.StoredProcedure);
                 return isBooked;
+            }
+        }
+
+        public async Task<IEnumerable<Bookings>> GetBookingsByUserId(int UserId)
+        {
+            using (var conn = _dbContext.GetDbConnection())
+            {
+                var eventsByUserId = await conn.QueryAsync<Bookings>("GetUserBookings", new { @UserID = UserId }, commandType: CommandType.StoredProcedure);
+                return eventsByUserId;
             }
         }
     }

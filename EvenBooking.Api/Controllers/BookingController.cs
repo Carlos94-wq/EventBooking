@@ -2,6 +2,8 @@
 using EvenBooking.Api.Payloads.Responses;
 using EventBooking.Application.Commands;
 using EventBooking.Application.Error;
+using EventBooking.Application.Querys;
+using EventBooking.Application.Responses;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -39,6 +41,26 @@ namespace EvenBooking.Api.Controllers
                 var response = new ApiResponse<bool>(result);
 
                 return Ok(response);
+            }
+            catch (HttpException e)
+            {
+                throw e;
+            }
+        }
+
+        [HttpGet]
+        [Route("/api/[controller]/{userId}")]
+        [ProducesResponseType(typeof(ApiResponse<GetBookingsByUserIDResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse<>), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ApiResponse<>), StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetBookingsByUserId(int userId)
+        {
+            try
+            {
+                var result = await _mediator.Send(new GetBookingsByUserID.Query(userId));
+                var apiResponse = new ApiResponse<IEnumerable<GetBookingsByUserIDResponse>>(result);
+
+                return Ok(apiResponse);
             }
             catch (HttpException e)
             {
