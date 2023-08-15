@@ -14,6 +14,15 @@ namespace EventBooking.Percistance.Repository
             _dbContext = dbContext;
         }
 
+        public async Task<int> CanelBookingsByBookingId(int BookingId)
+        {
+            using (var conn = _dbContext.GetDbConnection())
+            {
+                var isCanceled = await conn.ExecuteAsync("CancelBooking", new { @BookingID = BookingId }, commandType: CommandType.StoredProcedure);
+                return isCanceled;
+            }
+        }
+
         public async Task<int> CreaateBooking(Bookings bookings)
         {
             using (var conn = _dbContext.GetDbConnection())

@@ -11,5 +11,6 @@ namespace EventBooking.Domain.Interfaces
     {
         Task<int> CreaateBooking(Bookings bookings);
         Task<IEnumerable<Bookings>> GetBookingsByUserId(int UserId);
+        Task<int> CanelBookingsByBookingId(int BookingId);
     }
 }
