@@ -6,7 +6,6 @@ using EventBooking.Application.Querys;
 using EventBooking.Application.Responses;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenBooking.Api.Controllers
@@ -51,14 +50,30 @@ namespace EvenBooking.Api.Controllers
         [HttpGet]
         [Route("/api/[controller]/{userId}")]
         [ProducesResponseType(typeof(ApiResponse<GetBookingsByUserIDResponse>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ApiResponse<>), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(ApiResponse<>), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetBookingsByUserId(int userId)
         {
             try
             {
                 var result = await _mediator.Send(new GetBookingsByUserID.Query(userId));
                 var apiResponse = new ApiResponse<IEnumerable<GetBookingsByUserIDResponse>>(result);
+
+                return Ok(apiResponse);
+            }
+            catch (HttpException e)
+            {
+                throw e;
+            }
+        }
+
+        [HttpDelete]
+        [Route("/api/[controller]/cancel/{bookingID}")]
+        [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> CanelBookingsByBookingID(int bookingID)
+        {
+            try
+            {
+                var result = await _mediator.Send(new CancelBookingByBookingId.Command(bookingID));
+                var apiResponse = new ApiResponse<bool>(result);
 
                 return Ok(apiResponse);
             }
