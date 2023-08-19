@@ -1,5 +1,7 @@
-﻿using EvenBooking.Api.Payloads.Responses;
+﻿using EvenBooking.Api.Payloads.Requests;
+using EvenBooking.Api.Payloads.Responses;
 using EventBooking.Application;
+using EventBooking.Application.Commands;
 using EventBooking.Application.Error;
 using EventBooking.Application.Querys;
 using EventBooking.Application.Responses;
@@ -60,9 +62,26 @@ namespace EvenBooking.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddNewEvent()
+        [ProducesResponseType(typeof(ApiResponse<bool>),StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse),StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> AddNewEvent([FromBody] NewEventRequest request)
         {
-            return Ok();
+            try
+            {
+                var result = await _mediator.Send( new CreateNewEvent.Command(
+                    request.EventName, 
+                    request.EventDate, 
+                    request.VenueID, 
+                    request.AvailableSeats
+                ));
+                var apiResponse = new ApiResponse<bool>(result);
+
+                return Ok(apiResponse);
+            }
+            catch (HttpException e)
+            {
+                throw e;
+            }
         }
 
         [HttpPut("{id}")]
