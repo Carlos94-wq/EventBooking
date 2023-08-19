@@ -1,20 +1,41 @@
-﻿using MediatR;
-using Microsoft.AspNetCore.Http;
+﻿using EvenBooking.Api.Payloads.Responses;
+using EventBooking.Application.Error;
+using EventBooking.Application.Querys;
+using EventBooking.Application.Responses;
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvenBooking.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class VenuesController : ControllerBase
     {
-       
+        private readonly IMediator _mediator;
+
+        public VenuesController(IMediator mediator)
+        {
+            _mediator = mediator;
+        }
 
         [HttpGet]
-        public async Task<IActionResult> RetrieveVenues([FromQuery] int id)
+        [Route("/api/[controller]")]
+        public async Task<IActionResult> RetrieveVenues([FromQuery] string? venueName, string? adderss)
         {
 
-            return Ok();
+            try
+            {
+                var result = await _mediator.Send( new GetVenues.Query(venueName, adderss) );
+                var apiResponse = new ApiResponse<IEnumerable<GetVenuesResponse>>(result);
+
+                return Ok(apiResponse);
+            }
+            catch (HttpException e)
+            {
+                throw e;
+            }
         }
 
         [HttpGet]

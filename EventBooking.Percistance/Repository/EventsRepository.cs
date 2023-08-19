@@ -28,6 +28,15 @@ namespace EventBooking.Percistance.Repository
             }
         }
 
+        public async Task<IEnumerable<Events>> GetEventsByVenueId(int VenueId)
+        {
+            using (var conn = _dbContext.GetDbConnection())
+            {
+                var EventsByVenueId = await conn.QueryAsync<Events>("GetEventsByVenueId", new { @VenueId = VenueId }, commandType: CommandType.StoredProcedure);
+                return EventsByVenueId;
+            }
+        }
+
         public async Task<IEnumerable<Events>> GetUpcomingEvents()
         {
             using (var conn = _dbContext.GetDbConnection())
