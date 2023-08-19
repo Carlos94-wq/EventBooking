@@ -10,5 +10,7 @@ namespace EventBooking.Domain.Interfaces
     public interface IBookingRepository
     {
         Task<int> CreaateBooking(Bookings bookings);
+        Task<IEnumerable<Bookings>> GetBookingsByUserId(int UserId);
+        Task<int> CanelBookingsByBookingId(int BookingId);
     }
 }
