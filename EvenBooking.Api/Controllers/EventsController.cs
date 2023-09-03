@@ -1,5 +1,7 @@
-﻿using EvenBooking.Api.Payloads.Responses;
+﻿using EvenBooking.Api.Payloads.Requests;
+using EvenBooking.Api.Payloads.Responses;
 using EventBooking.Application;
+using EventBooking.Application.Commands;
 using EventBooking.Application.Error;
 using EventBooking.Application.Querys;
 using EventBooking.Application.Responses;
@@ -40,6 +42,35 @@ namespace EvenBooking.Api.Controllers
             }
         }
 
+        [HttpPost]
+        [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> AddNewEvent([FromBody] NewEventRequest request)
+        {
+            try
+            {
+                var result = await _mediator.Send(new CreateNewEvent.Command(
+                    request.EventName,
+                    request.EventDate,
+                    request.VenueID,
+                    request.AvailableSeats
+                ));
+                var apiResponse = new ApiResponse<bool>(result);
+
+                return Ok(apiResponse);
+            }
+            catch (HttpException e)
+            {
+                throw e;
+            }
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> AddNewEvent(int id)
+        {
+            return Ok();
+        }
+
         [HttpGet]
         [Route("/api/[controller]/details/{id}")]
         [ProducesResponseType(typeof(ApiResponse<GetEventsDetailsResponse>), StatusCodes.Status200OK)]
@@ -60,13 +91,59 @@ namespace EvenBooking.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddNewEvent()
+        [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> AddNewEvent_1([FromBody] NewEventRequest request)
+        {
+            try
+            {
+                var result = await _mediator.Send(new CreateNewEvent.Command(
+                    request.EventName,
+                    request.EventDate,
+                    request.VenueID,
+                    request.AvailableSeats
+                ));
+                var apiResponse = new ApiResponse<bool>(result);
+
+                return Ok(apiResponse);
+            }
+            catch (HttpException e)
+            {
+                throw e;
+            }
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> AddNewEvent_2(int id)
         {
             return Ok();
         }
 
+        [HttpPost]
+        [ProducesResponseType(typeof(ApiResponse<bool>),StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse),StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> AddNewEvent_3([FromBody] NewEventRequest request)
+        {
+            try
+            {
+                var result = await _mediator.Send( new CreateNewEvent.Command(
+                    request.EventName, 
+                    request.EventDate, 
+                    request.VenueID, 
+                    request.AvailableSeats
+                ));
+                var apiResponse = new ApiResponse<bool>(result);
+
+                return Ok(apiResponse);
+            }
+            catch (HttpException e)
+            {
+                throw e;
+            }
+        }
+
         [HttpPut("{id}")]
-        public async Task<IActionResult> AddNewEvent(int id)
+        public async Task<IActionResult> AddNewEvent_4(int id)
         {
             return Ok();
         }
