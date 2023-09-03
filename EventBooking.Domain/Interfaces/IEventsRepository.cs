@@ -7,5 +7,6 @@ namespace EventBooking.Domain.Interfaces
         Task<IEnumerable<Events>> GetUpcomingEvents();
         Task<IEnumerable<Events>> GetEventsByVenueId(int VenueId);
         Task<Events> GetEventDetails(int EventId);      
+        Task<int> AddEvent(Events Event);      
     }
 }

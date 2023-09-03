@@ -14,6 +14,22 @@ namespace EventBooking.Percistance.Repository
             _dbContext = dbContext;
         }
 
+        public async Task<int> AddEvent(Events Event)
+        {
+            using (var conn = _dbContext.GetDbConnection())
+            {
+                var isAdded = await conn.ExecuteScalarAsync<int>("AddNewEvent", new { 
+                    @EventName = Event.EventName,
+                    @EventDate = Event.EventDate, 
+                    @VenueId = Event.VenueID, 
+                    @AvailableSeats = Event.AvailableSeats 
+                }, 
+                commandType: CommandType.StoredProcedure);
+
+                return isAdded;
+            }
+        }
+
         public async Task<Events> GetEventDetails(int EventId)
         {
             using (var conn = _dbContext.GetDbConnection())
